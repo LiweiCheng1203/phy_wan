@@ -25,6 +25,8 @@ def run(stage, cmd, env=None):
             subprocess.run(cmd, cwd=REPO, env=env, stdout=f, stderr=subprocess.STDOUT, check=True)
     except BaseException as exc:
         write_json(ROOT / "reports/experiment_status.json", {"stage": stage, "status": "failed", "log": str(log), "error": str(exc)})
+        print(f"STAGE_FAILED {stage}: {log}", flush=True)
+        print("\n".join(log.read_text(errors="replace").splitlines()[-80:]), flush=True)
         raise
     write_json(done, {"signature": signature, "seconds": time.monotonic() - begin, "command": cmd, "log": str(log)})
     print("STAGE_DONE", stage, round(time.monotonic() - begin, 1), flush=True)

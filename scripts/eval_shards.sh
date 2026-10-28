@@ -13,6 +13,8 @@ export PYTHONPATH="$REPO:$TASK_ROOT/tools" OMP_NUM_THREADS=4 OPENBLAS_NUM_THREAD
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 export VIDEOX_ATTENTION_TYPE=SDPA
 mkdir -p "$output"
+# Prepare the shared AlexNet cache once; never race downloads across GPU workers.
+CUDA_VISIBLE_DEVICES='' "$REPO/.venv/bin/python" "$TASK_ROOT/tools/evaluate.py" --output "$output" --prepare_only
 extra=()
 if [ "$first" = first ]; then extra+=(--first_segment_only); fi
 jobs=()
@@ -34,6 +36,12 @@ for shard in "${!devices[@]}"; do
   jobs+=("$!")
 done
 status=0
-for pid in "${jobs[@]}"; do wait "$pid" || status=1; done
+for shard in "${!jobs[@]}"; do
+  if ! wait "${jobs[$shard]}"; then
+    status=1
+    echo "Evaluation shard $shard failed: $output/shard_$shard.log" >&2
+    tail -n 50 "$output/shard_$shard.log" >&2
+  fi
+done
 if [ "$status" -ne 0 ]; then echo "Evaluation shard failed: $output" >&2; exit 1; fi
 "$REPO/.venv/bin/python" "$TASK_ROOT/tools/evaluate.py" --output "$output" --split "$split" --aggregate_only

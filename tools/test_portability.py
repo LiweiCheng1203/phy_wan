@@ -107,3 +107,52 @@ def test_evaluation_uses_configured_gpu_list(tmp_path):
         assert len(calls) == 2 and all(call["gpu"] == gpu for call in calls)
         assert all(call["argv"][call["argv"].index("--shard") + 1] == str(shard) for call in calls)
         assert all(call["argv"][call["argv"].index("--num_shards") + 1] == "2" for call in calls)
+
+
+@pytest.mark.parametrize("custom_cache", [False, True])
+def test_lpips_ignores_inherited_torch_cache(tmp_path, monkeypatch, custom_cache):
+    import lpips
+    import torch
+    import evaluate
+
+    monkeypatch.setattr(evaluate, "ROOT", tmp_path)
+    monkeypatch.setenv("TORCH_HOME", "/unwritable/another-user/torch")
+    cache = tmp_path / "custom" if custom_cache else tmp_path / ".cache/torch"
+    if custom_cache:
+        monkeypatch.setenv("SIM2REAL_TORCH_HOME", str(cache))
+    else:
+        monkeypatch.delenv("SIM2REAL_TORCH_HOME", raising=False)
+    monkeypatch.setattr(torch.hub, "_hub_dir", None)
+
+    def network(**kwargs):
+        assert torch.hub.get_dir() == str(cache / "hub")
+        assert (cache / "hub").is_dir()
+        return torch.nn.Identity()
+
+    monkeypatch.setattr(lpips, "LPIPS", network)
+    evaluate.metric_network()
+
+
+def test_failed_evaluation_shard_reports_its_error(tmp_path):
+    import os
+    from pathlib import Path
+    import subprocess
+    import sys
+
+    repo = tmp_path / "upstream"
+    python = repo / ".venv/bin/python"
+    python.parent.mkdir(parents=True)
+    python.write_text(f"#!{sys.executable}\n" +
+        "import sys\n" +
+        "if '--prepare_only' not in sys.argv:\n" +
+        "    print('specific evaluation failure', file=sys.stderr)\n" +
+        "    sys.exit(1)\n")
+    python.chmod(0o755)
+    output = tmp_path / "output"
+    script = Path(__file__).resolve().parents[1] / "scripts/eval_shards.sh"
+    result = subprocess.run(["bash", str(script), str(output), "val", "static"], capture_output=True, text=True,
+                            env={**os.environ, "SIM2REAL_ROOT": str(tmp_path), "SIM2REAL_REPO": str(repo),
+                                 "SIM2REAL_GPUS": "3,4"})
+    assert result.returncode != 0
+    assert "specific evaluation failure" in result.stderr
+    assert "shard_0.log" in result.stderr and "shard_1.log" in result.stderr

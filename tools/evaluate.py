@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 from pathlib import Path
 
 import numpy as np
@@ -10,6 +11,17 @@ from PIL import Image
 from skimage.metrics import structural_similarity
 
 from common import DATA, ROOT, HSV, blue_center, decode, dilate, encode, fingerprint, read_json, reference_video, sha256, write_json
+
+
+def metric_network(device="cpu"):
+    import torch
+    import lpips
+    # Login shells may inherit another user's unwritable TORCH_HOME.
+    cache = Path(os.environ.get("SIM2REAL_TORCH_HOME", str(ROOT / ".cache/torch"))).expanduser()
+    hub = cache / "hub"
+    hub.mkdir(parents=True, exist_ok=True)
+    torch.hub.set_dir(str(hub))
+    return lpips.LPIPS(net="alex", spatial=True).eval().to(device)
 
 
 def average(values):
@@ -129,14 +141,18 @@ def main():
     p.add_argument("--shard", type=int, default=0)
     p.add_argument("--num_shards", type=int, default=1)
     p.add_argument("--aggregate_only", action="store_true")
+    p.add_argument("--prepare_only", action="store_true", help="Prepare LPIPS weights on CPU before launching evaluation workers")
     args = p.parse_args()
+    if args.prepare_only:
+        metric_network()
+        print("LPIPS_READY", flush=True)
+        return
     episodes = read_json(ROOT / "split.json")[args.split]
     if not args.aggregate_only:
         import torch
-        import lpips
         torch.set_num_threads(4)
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        network = lpips.LPIPS(net="alex", spatial=True).eval().to(device)
+        network = metric_network(device)
         for episode in episodes[args.shard::args.num_shards]:
             output = args.output / episode
             metrics = output / "metrics.json"

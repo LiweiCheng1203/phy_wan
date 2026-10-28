@@ -24,3 +24,4 @@ fi
 uv pip list --python .venv/bin/python --format freeze > "$TASK_ROOT/reports/environment.lock.txt"
 CUDA_VISIBLE_DEVICES='' PYTHONPATH="$REPO" .venv/bin/python scripts/wan2.1_fun/train_control.py --help > "$TASK_ROOT/reports/train_help.txt"
 CUDA_VISIBLE_DEVICES='' PYTHONPATH="$REPO" .venv/bin/python -c 'from videox_fun.models import WanTransformer3DModel, AutoencoderKLWan, CLIPModel, WanT5EncoderModel; from videox_fun.pipeline import WanFunControlPipeline; import torch,decord; print("Model and pipeline imports passed:", torch.__version__, "CUDA build", torch.version.cuda)'
+CUDA_VISIBLE_DEVICES='' PYTHONPATH="$REPO:$TASK_ROOT/tools" .venv/bin/python "$TASK_ROOT/tools/evaluate.py" --output "$TASK_ROOT/eval" --prepare_only

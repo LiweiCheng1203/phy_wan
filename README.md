@@ -61,6 +61,8 @@ bash scripts/setup_env.sh
 
 PyTorch 固定 2.7.1 cu128，torchvision 固定 0.22.1。依赖版本见 `configs/environment.lock.txt`，兼容约束见 `configs/constraints.txt`。安装脚本检查训练入口和模型导入，默认 SDPA，不要求 flash-attn。数据渲染单独使用 MuJoCo 3.15.0 环境。
 
+安装时预备 LPIPS 所需的 AlexNet 权重，默认缓存到项目 `.cache/torch/`；可通过 `SIM2REAL_TORCH_HOME` 指定自己的可写目录。评估入口会先在 CPU 检查该权重，再启动各 GPU 分片；失败分片的日志会直接显示在主日志中。
+
 ## 4. 训练与评估
 
 以下命令会开始训练。先在 `.env` 设置可用的 `SIM2REAL_GPUS`，并确认其没有被其他任务占用。
