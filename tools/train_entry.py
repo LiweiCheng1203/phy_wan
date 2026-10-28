@@ -1,9 +1,9 @@
 """Execute the unchanged upstream trainer with runtime contract/provenance checks."""
-import functools
+import argparse
 import json
 import os
 from pathlib import Path
-import runpy
+import shutil
 import sys
 import time
 
@@ -13,6 +13,8 @@ from accelerate import Accelerator
 from common import REPO, ROOT, sha256
 from infer import strict_load
 from training_precision import prepare_full_precision_parameters
+from training_runtime import (compile_training_program, load_training_generators,
+                              save_rank_random_state, save_training_generators)
 
 sys.path.insert(0, str(REPO))
 from videox_fun.models import WanTransformer3DModel
@@ -23,6 +25,11 @@ audit_dir.mkdir(parents=True, exist_ok=True)
 rank = int(os.environ.get("RANK", 0))
 log_path = audit_dir / f"rank{rank}.jsonl"
 started = time.monotonic()
+runtime_parser = argparse.ArgumentParser(add_help=False)
+runtime_parser.add_argument("--output_dir", required=True)
+runtime_parser.add_argument("--max_train_steps", required=True, type=int)
+runtime_parser.add_argument("--checkpointing_steps", type=int, default=250)
+runtime_args, _ = runtime_parser.parse_known_args()
 
 
 def record(event, **values):
@@ -119,6 +126,7 @@ def checked_clip(acc, params, *args, **kwargs):
     norm = original_clip(acc, params, *args, **kwargs)
     if norm is not None:
         assert torch.isfinite(norm).all(), f"Nonfinite gradient norm: {norm}"
+        record("gradient", norm=float(norm), clipping_threshold=float(args[0] if args else kwargs["max_norm"]))
     return norm
 
 
@@ -132,6 +140,13 @@ def checked_log(acc, values, step=None, **kwargs):
             assert torch.isfinite(torch.tensor(value)), (name, value)
     if acc.is_main_process:
         record("training", step=step, values=values, peak_cuda_bytes=torch.cuda.max_memory_allocated())
+    if "train_loss" in values and step is not None and (
+            step % runtime_args.checkpointing_steps == 0 or step >= runtime_args.max_train_steps):
+        path = Path(runtime_args.output_dir) / ".rank_random_states" / f"checkpoint-{step}"
+        save_rank_random_state(acc, path)
+        save_training_generators(path, acc.process_index, sys._getframe(1).f_locals)
+        acc.wait_for_everyone()
+        record("rank_random_state_saved", step=step, accumulation_step=acc.step)
     return original_log(acc, values, step=step, **kwargs)
 
 
@@ -142,15 +157,32 @@ original_save = Accelerator.save_state
 def timed_save(acc, output_dir, *args, **kwargs):
     begin = time.monotonic()
     result = original_save(acc, output_dir, *args, **kwargs)
+    staged = Path(output_dir).parent / ".rank_random_states" / Path(output_dir).name
+    if acc.is_main_process:
+        for state in staged.glob("*random_states_*.pkl"):
+            shutil.copy2(state, Path(output_dir) / state.name)
     record("checkpoint_saved", path=str(output_dir), save_seconds=time.monotonic() - begin,
            bytes=sum(p.stat().st_size for p in Path(output_dir).rglob("*") if p.is_file()))
     return result
 
 
 Accelerator.save_state = timed_save
+original_restore = Accelerator.load_state
+
+
+def checked_restore(acc, input_dir, *args, **kwargs):
+    result = original_restore(acc, input_dir, *args, **kwargs)
+    load_training_generators(input_dir, acc.process_index, sys._getframe(1).f_locals)
+    record("training_generators_restored", path=str(input_dir), generators=["rng", "torch_rng", "index_rng"])
+    return result
+
+
+Accelerator.load_state = checked_restore
 record("start", argv=sys.argv[1:], torch=torch.__version__, trainer_sha256=sha256(REPO / "scripts/wan2.1_fun/train_control.py"),
        cuda_visible_devices=os.environ.get("CUDA_VISIBLE_DEVICES"))
-runpy.run_path(str(REPO / "scripts/wan2.1_fun/train_control.py"), run_name="__main__")
+trainer_path = REPO / "scripts/wan2.1_fun/train_control.py"
+record("runtime_corrections", epoch_stop_guard=True, per_rank_random_states=True)
+exec(compile_training_program(trainer_path), {"__name__": "__main__", "__file__": str(trainer_path)})
 changes = {name: float((p.detach().flatten()[:1024].float().cpu() - initial).abs().max()) for name, p, initial in monitored}
 record("completed", parameter_changes=changes, peak_cuda_bytes=torch.cuda.max_memory_allocated())
 assert any(v > 0 for v in changes.values()), "No monitored Transformer parameters changed"

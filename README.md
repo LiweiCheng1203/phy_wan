@@ -56,7 +56,7 @@ uv pip install --python .venv-data/bin/python -r configs/data_requirements.txt
 ```bash
 # 安装训练依赖并检查真实训练入口和模型类的导入；不会训练或加载模型权重：
 bash scripts/setup_env.sh
-"$SIM2REAL_REPO/.venv/bin/python" -m pytest -q tools/test_contracts.py tools/test_portability.py
+"$SIM2REAL_REPO/.venv/bin/python" -m pytest -q tools/test_contracts.py tools/test_portability.py tools/test_training_runtime.py
 ```
 
 PyTorch 固定 2.7.1 cu128，torchvision 固定 0.22.1。依赖版本见 `configs/environment.lock.txt`，兼容约束见 `configs/constraints.txt`。安装脚本检查训练入口和模型导入，默认 SDPA，不要求 flash-attn。数据渲染单独使用 MuJoCo 3.15.0 环境。
@@ -71,6 +71,8 @@ mkdir -p logs
 ```
 
 建议在 tmux 中运行。该入口依次执行单卡恢复冒烟、四卡恢复冒烟、验证集基线、Run A 3000 步、模型选择和测试；失败即停止。计算采用 bf16 混合精度，可训练参数及 AdamW 状态使用 FP32。DDP OOM 后支持 `--memory low_vram`；ZeRO-2 尚未实现。
+
+训练包装入口补齐各 DDP 进程及训练专用生成器的随机状态，并为恢复后的外层 epoch 循环加入目标步数保护；固定版本的上游源文件保持原样。缺少专用随机状态的旧 checkpoint 不能用于恢复训练，但可加载推理。采样器沿用上游的预取回退策略，恢复不保证逐位重现未中断训练。
 
 81 帧分段、重叠 1 帧，后段条件使用上一段生成末帧；保留模型原始首帧，不替换、不混合接缝。尾段重复控制末帧补齐到 4k+1，输出裁回原始帧数。按 episode 和段号稳定派生种子；每种 shift 重新构造 Flow Euler 调度器。
 
