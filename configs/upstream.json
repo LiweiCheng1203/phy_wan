@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/aigc-apps/VideoX-Fun.git",
+  "commit": "13bb3c625e8b1e457d7124d92207b49e00e4a6fe",
+  "model": "Wan2.1-Fun-V1.1-1.3B-Control",
+  "python": "3.10"
+}

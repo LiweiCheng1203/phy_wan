@@ -1,0 +1,7 @@
+torch==2.7.1
+torchvision==0.22.1
+torchaudio==2.7.1
+numpy==2.2.6
+transformers>=4.57,<5
+diffusers>=0.36,<0.38
+accelerate>=1.10,<2

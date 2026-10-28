@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+TASK_ROOT=${SIM2REAL_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}
+REPO=${SIM2REAL_REPO:-$(dirname "$TASK_ROOT")/VideoX-Fun}
+export SIM2REAL_ROOT="$TASK_ROOT" SIM2REAL_REPO="$REPO"
+output=${1:?output directory required}
+split=${2:-val}
+ckpt=${3:-pretrained}
+cfg=${4:-1}
+shift=${5:-3}
+first=${6:-full}
+export PYTHONPATH="$REPO:$TASK_ROOT/tools" OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=1 TOKENIZERS_PARALLELISM=false
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+mkdir -p "$output"
+extra=()
+if [ "$first" = first ]; then extra+=(--first_segment_only); fi
+jobs=()
+for shard in 0 1 2 3; do
+  gpu=$((shard+4))
+  (
+    export CUDA_VISIBLE_DEVICES=$gpu
+    if [ "$ckpt" != static ]; then
+      "$REPO/.venv/bin/python" "$TASK_ROOT/tools/infer.py" --output "$output" --split "$split" \
+        --ckpt "$ckpt" --guidance_scale "$cfg" --shift "$shift" --shard "$shard" --num_shards 4 "${extra[@]}"
+    fi
+    static=()
+    if [ "$ckpt" = static ]; then static+=(--static); fi
+    "$REPO/.venv/bin/python" "$TASK_ROOT/tools/evaluate.py" --output "$output" --split "$split" \
+      --shard "$shard" --num_shards 4 "${static[@]}"
+  ) > "$output/shard_$shard.log" 2>&1 &
+  jobs+=("$!")
+done
+status=0
+for pid in "${jobs[@]}"; do wait "$pid" || status=1; done
+if [ "$status" -ne 0 ]; then echo "Evaluation shard failed: $output" >&2; exit 1; fi
+"$REPO/.venv/bin/python" "$TASK_ROOT/tools/evaluate.py" --output "$output" --split "$split" --aggregate_only

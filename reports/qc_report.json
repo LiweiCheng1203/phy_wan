@@ -1,0 +1,1239 @@
+{
+  "hsv": {
+    "lower": [
+      90,
+      60,
+      40
+    ],
+    "upper": [
+      135,
+      255,
+      255
+    ],
+    "min_pixels": 20
+  },
+  "episodes": [
+    {
+      "episode": "episode_000004",
+      "median_px": 20.62072711675166,
+      "p95_px": 28.659586589014857,
+      "coverage": 1.0,
+      "N": 123,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000007",
+      "median_px": 27.148437714660684,
+      "p95_px": 46.10094746910229,
+      "coverage": 1.0,
+      "N": 118,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000010",
+      "median_px": 33.59466908622892,
+      "p95_px": 43.767215136502735,
+      "coverage": 1.0,
+      "N": 120,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000012",
+      "median_px": 22.402219174312695,
+      "p95_px": 31.23640297435825,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000025",
+      "median_px": 20.421328049310578,
+      "p95_px": 34.86820059912561,
+      "coverage": 1.0,
+      "N": 107,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000034",
+      "median_px": 25.895645078530865,
+      "p95_px": 38.55468707065516,
+      "coverage": 1.0,
+      "N": 119,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000040",
+      "median_px": 22.93368179216008,
+      "p95_px": 33.09104930562352,
+      "coverage": 1.0,
+      "N": 114,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000043",
+      "median_px": 29.91928616663,
+      "p95_px": 46.38957989483037,
+      "coverage": 1.0,
+      "N": 129,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000048",
+      "median_px": 28.04902262509489,
+      "p95_px": 34.25995797936363,
+      "coverage": 1.0,
+      "N": 105,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000051",
+      "median_px": 24.381639343314127,
+      "p95_px": 30.049457102513575,
+      "coverage": 1.0,
+      "N": 100,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000053",
+      "median_px": 25.7719070003968,
+      "p95_px": 31.67038694506666,
+      "coverage": 1.0,
+      "N": 90,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000057",
+      "median_px": 27.526144033436495,
+      "p95_px": 44.45290242541421,
+      "coverage": 1.0,
+      "N": 127,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000058",
+      "median_px": 31.445140253199927,
+      "p95_px": 44.379568656329894,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000071",
+      "median_px": 36.28079079034381,
+      "p95_px": 51.48784305487658,
+      "coverage": 1.0,
+      "N": 123,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000073",
+      "median_px": 28.75157986610862,
+      "p95_px": 37.90520594528616,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000076",
+      "median_px": 34.42533286098251,
+      "p95_px": 48.35439144783987,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000080",
+      "median_px": 24.530793463863347,
+      "p95_px": 33.18878036098599,
+      "coverage": 1.0,
+      "N": 94,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000088",
+      "median_px": 21.414001461023496,
+      "p95_px": 40.73626477461785,
+      "coverage": 1.0,
+      "N": 119,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000097",
+      "median_px": 33.77076962720112,
+      "p95_px": 48.22001505248653,
+      "coverage": 1.0,
+      "N": 116,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000100",
+      "median_px": 30.083612043945546,
+      "p95_px": 39.63144086586431,
+      "coverage": 1.0,
+      "N": 119,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000103",
+      "median_px": 25.9374884516165,
+      "p95_px": 39.309282219393516,
+      "coverage": 1.0,
+      "N": 117,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000104",
+      "median_px": 30.754178766235775,
+      "p95_px": 45.649577305799895,
+      "coverage": 1.0,
+      "N": 127,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000105",
+      "median_px": 27.70874360273475,
+      "p95_px": 41.3843051262764,
+      "coverage": 1.0,
+      "N": 106,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000111",
+      "median_px": 27.906119833616525,
+      "p95_px": 50.16513861472977,
+      "coverage": 0.9754098360655737,
+      "N": 122,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000122",
+      "median_px": 20.28807866501974,
+      "p95_px": 33.209338668015405,
+      "coverage": 1.0,
+      "N": 99,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000130",
+      "median_px": 19.811356196593334,
+      "p95_px": 27.478151155270908,
+      "coverage": 1.0,
+      "N": 111,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000137",
+      "median_px": 31.789752743273567,
+      "p95_px": 48.12990510144805,
+      "coverage": 1.0,
+      "N": 108,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000138",
+      "median_px": 26.235720264626686,
+      "p95_px": 32.612234197157456,
+      "coverage": 1.0,
+      "N": 123,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000140",
+      "median_px": 29.19177849650204,
+      "p95_px": 35.29406664182166,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000147",
+      "median_px": 27.857793564783634,
+      "p95_px": 36.151783949708225,
+      "coverage": 1.0,
+      "N": 130,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000149",
+      "median_px": 33.839658890769456,
+      "p95_px": 41.735015423324434,
+      "coverage": 1.0,
+      "N": 130,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000153",
+      "median_px": 31.724546896348137,
+      "p95_px": 44.838386831089,
+      "coverage": 1.0,
+      "N": 117,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000156",
+      "median_px": 20.103353682662345,
+      "p95_px": 45.90640401068464,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000159",
+      "median_px": 27.798104472035277,
+      "p95_px": 45.2355813977925,
+      "coverage": 1.0,
+      "N": 114,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000172",
+      "median_px": 25.058064903272548,
+      "p95_px": 41.51673733772883,
+      "coverage": 1.0,
+      "N": 104,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000175",
+      "median_px": 19.11854266713854,
+      "p95_px": 46.8809419038051,
+      "coverage": 1.0,
+      "N": 122,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000176",
+      "median_px": 31.20122847413394,
+      "p95_px": 40.05995078533011,
+      "coverage": 1.0,
+      "N": 124,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000177",
+      "median_px": 22.648297310235602,
+      "p95_px": 38.914622142452295,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000182",
+      "median_px": 23.687317255719943,
+      "p95_px": 47.07600118913545,
+      "coverage": 1.0,
+      "N": 105,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000190",
+      "median_px": 22.335500338635356,
+      "p95_px": 34.989387248977756,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000191",
+      "median_px": 28.60674102705706,
+      "p95_px": 43.330317131969686,
+      "coverage": 1.0,
+      "N": 117,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000196",
+      "median_px": 28.16944007750245,
+      "p95_px": 38.78520557761643,
+      "coverage": 1.0,
+      "N": 116,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000201",
+      "median_px": 27.33237610432679,
+      "p95_px": 45.621801793837044,
+      "coverage": 1.0,
+      "N": 101,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000209",
+      "median_px": 20.84384080313484,
+      "p95_px": 34.73163170301771,
+      "coverage": 1.0,
+      "N": 107,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000228",
+      "median_px": 31.467876794343947,
+      "p95_px": 44.63024200296569,
+      "coverage": 1.0,
+      "N": 114,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000233",
+      "median_px": 23.095560298660732,
+      "p95_px": 29.596478223706107,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000234",
+      "median_px": 27.144316988518383,
+      "p95_px": 32.19655853561935,
+      "coverage": 1.0,
+      "N": 111,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000242",
+      "median_px": 35.317142213959144,
+      "p95_px": 51.07904738791332,
+      "coverage": 1.0,
+      "N": 98,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000246",
+      "median_px": 27.328836366843937,
+      "p95_px": 35.71363971644945,
+      "coverage": 1.0,
+      "N": 107,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000259",
+      "median_px": 25.02584329477435,
+      "p95_px": 33.03106308717559,
+      "coverage": 1.0,
+      "N": 99,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000272",
+      "median_px": 23.5011641661024,
+      "p95_px": 36.56975034470585,
+      "coverage": 1.0,
+      "N": 102,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000280",
+      "median_px": 33.289099680264364,
+      "p95_px": 51.27023930097581,
+      "coverage": 1.0,
+      "N": 116,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000281",
+      "median_px": 31.695515097701982,
+      "p95_px": 36.51395856336938,
+      "coverage": 1.0,
+      "N": 120,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000293",
+      "median_px": 29.501978690006673,
+      "p95_px": 34.79040904637634,
+      "coverage": 1.0,
+      "N": 130,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000295",
+      "median_px": 28.536866013765334,
+      "p95_px": 38.42240056469982,
+      "coverage": 1.0,
+      "N": 113,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000296",
+      "median_px": 38.47299220720369,
+      "p95_px": 57.59989588253068,
+      "coverage": 1.0,
+      "N": 118,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000312",
+      "median_px": 31.622675900907897,
+      "p95_px": 48.45914648694536,
+      "coverage": 1.0,
+      "N": 116,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000317",
+      "median_px": 27.136868141313272,
+      "p95_px": 38.92968943074493,
+      "coverage": 1.0,
+      "N": 123,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000322",
+      "median_px": 22.87502446729586,
+      "p95_px": 31.81260040957507,
+      "coverage": 1.0,
+      "N": 116,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000332",
+      "median_px": 28.746559373007106,
+      "p95_px": 42.22925277808818,
+      "coverage": 1.0,
+      "N": 105,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000335",
+      "median_px": 20.11537354223828,
+      "p95_px": 41.77715492180472,
+      "coverage": 1.0,
+      "N": 108,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000342",
+      "median_px": 25.379115621479535,
+      "p95_px": 31.27879753311061,
+      "coverage": 1.0,
+      "N": 102,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000347",
+      "median_px": 22.401025675253592,
+      "p95_px": 33.057474090606256,
+      "coverage": 1.0,
+      "N": 126,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000351",
+      "median_px": 14.900548436840094,
+      "p95_px": 37.28932739035998,
+      "coverage": 1.0,
+      "N": 119,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000354",
+      "median_px": 35.58955329544845,
+      "p95_px": 44.08179021117773,
+      "coverage": 1.0,
+      "N": 125,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000355",
+      "median_px": 33.69127728791108,
+      "p95_px": 43.56135684629243,
+      "coverage": 1.0,
+      "N": 129,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000368",
+      "median_px": 23.790001810628038,
+      "p95_px": 31.99297567980683,
+      "coverage": 1.0,
+      "N": 125,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000370",
+      "median_px": 21.29398825593907,
+      "p95_px": 37.50669597562228,
+      "coverage": 1.0,
+      "N": 109,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000376",
+      "median_px": 22.130212841265887,
+      "p95_px": 36.069206727483,
+      "coverage": 1.0,
+      "N": 117,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000389",
+      "median_px": 27.830008420266036,
+      "p95_px": 37.35139683747945,
+      "coverage": 1.0,
+      "N": 128,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000402",
+      "median_px": 24.35690532007896,
+      "p95_px": 38.27167774839373,
+      "coverage": 1.0,
+      "N": 103,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000407",
+      "median_px": 30.56735777543723,
+      "p95_px": 40.238123096289314,
+      "coverage": 1.0,
+      "N": 125,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000417",
+      "median_px": 16.108789749627316,
+      "p95_px": 35.91872886876898,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000426",
+      "median_px": 28.379565558500655,
+      "p95_px": 41.57653353851285,
+      "coverage": 1.0,
+      "N": 106,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000438",
+      "median_px": 24.210542714409346,
+      "p95_px": 46.391366935536865,
+      "coverage": 1.0,
+      "N": 127,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000443",
+      "median_px": 22.968849512082777,
+      "p95_px": 32.86373450347668,
+      "coverage": 1.0,
+      "N": 130,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000446",
+      "median_px": 31.407369640324582,
+      "p95_px": 43.07410182407452,
+      "coverage": 1.0,
+      "N": 105,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000456",
+      "median_px": 38.188010810463226,
+      "p95_px": 44.356014591939996,
+      "coverage": 1.0,
+      "N": 118,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000464",
+      "median_px": 35.365113103296636,
+      "p95_px": 42.65207548276181,
+      "coverage": 1.0,
+      "N": 126,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000468",
+      "median_px": 35.28458923591887,
+      "p95_px": 44.36128588427197,
+      "coverage": 1.0,
+      "N": 119,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000486",
+      "median_px": 25.756396031942188,
+      "p95_px": 43.27463127219228,
+      "coverage": 1.0,
+      "N": 106,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000519",
+      "median_px": 28.485721207820987,
+      "p95_px": 48.43214770122577,
+      "coverage": 1.0,
+      "N": 110,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000521",
+      "median_px": 26.555735703352113,
+      "p95_px": 31.033027361702935,
+      "coverage": 1.0,
+      "N": 164,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000541",
+      "median_px": 19.501474133152573,
+      "p95_px": 30.76510777802975,
+      "coverage": 1.0,
+      "N": 118,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000544",
+      "median_px": 35.64839370030853,
+      "p95_px": 41.155325549677926,
+      "coverage": 1.0,
+      "N": 116,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000563",
+      "median_px": 36.454251101647905,
+      "p95_px": 45.504453289178485,
+      "coverage": 1.0,
+      "N": 127,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000576",
+      "median_px": 33.25905613415543,
+      "p95_px": 46.517005163527976,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000581",
+      "median_px": 28.38529880086437,
+      "p95_px": 33.91528890182507,
+      "coverage": 1.0,
+      "N": 113,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000582",
+      "median_px": 21.564983059669885,
+      "p95_px": 34.70358841881807,
+      "coverage": 1.0,
+      "N": 108,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000591",
+      "median_px": 19.908801052950256,
+      "p95_px": 31.248446168432555,
+      "coverage": 1.0,
+      "N": 110,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000595",
+      "median_px": 28.29785915592426,
+      "p95_px": 35.58519852379174,
+      "coverage": 1.0,
+      "N": 101,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000598",
+      "median_px": 32.377913843345944,
+      "p95_px": 44.45205307439813,
+      "coverage": 1.0,
+      "N": 113,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000606",
+      "median_px": 33.80660270419539,
+      "p95_px": 41.87240691758636,
+      "coverage": 1.0,
+      "N": 111,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000615",
+      "median_px": 21.985137578665327,
+      "p95_px": 40.08081233997409,
+      "coverage": 1.0,
+      "N": 119,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000619",
+      "median_px": 19.23819385940054,
+      "p95_px": 34.9946860783614,
+      "coverage": 1.0,
+      "N": 120,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000621",
+      "median_px": 17.818771350878002,
+      "p95_px": 33.020883266271184,
+      "coverage": 1.0,
+      "N": 128,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000632",
+      "median_px": 16.77536412696915,
+      "p95_px": 37.604189384474004,
+      "coverage": 1.0,
+      "N": 102,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000646",
+      "median_px": 35.532852175816885,
+      "p95_px": 43.77983054424353,
+      "coverage": 1.0,
+      "N": 102,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000661",
+      "median_px": 30.949204962279705,
+      "p95_px": 37.62001643969679,
+      "coverage": 1.0,
+      "N": 117,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000668",
+      "median_px": 24.97937550807013,
+      "p95_px": 35.426494101288256,
+      "coverage": 1.0,
+      "N": 123,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000678",
+      "median_px": 17.090892579342405,
+      "p95_px": 36.29646929224645,
+      "coverage": 1.0,
+      "N": 105,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000682",
+      "median_px": 20.17826316187239,
+      "p95_px": 30.5008332217077,
+      "coverage": 1.0,
+      "N": 117,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000683",
+      "median_px": 22.964726243853498,
+      "p95_px": 27.467684438929677,
+      "coverage": 1.0,
+      "N": 105,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000690",
+      "median_px": 24.449398610602636,
+      "p95_px": 37.98090714775587,
+      "coverage": 1.0,
+      "N": 123,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000692",
+      "median_px": 28.14149514415412,
+      "p95_px": 40.8918216897423,
+      "coverage": 1.0,
+      "N": 120,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000702",
+      "median_px": 26.552402912616035,
+      "p95_px": 42.2290738096836,
+      "coverage": 1.0,
+      "N": 127,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000708",
+      "median_px": 32.09191426474166,
+      "p95_px": 42.74213077116088,
+      "coverage": 1.0,
+      "N": 120,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000709",
+      "median_px": 31.683128799844877,
+      "p95_px": 43.650014269823636,
+      "coverage": 1.0,
+      "N": 119,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000712",
+      "median_px": 29.585436847425605,
+      "p95_px": 39.706363693324676,
+      "coverage": 1.0,
+      "N": 117,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000722",
+      "median_px": 30.355159423096488,
+      "p95_px": 41.98027785299935,
+      "coverage": 1.0,
+      "N": 109,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000745",
+      "median_px": 11.41800698103922,
+      "p95_px": 30.40156729814035,
+      "coverage": 1.0,
+      "N": 121,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000759",
+      "median_px": 25.70925532155149,
+      "p95_px": 36.93378153820066,
+      "coverage": 1.0,
+      "N": 125,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000763",
+      "median_px": 24.19066183891552,
+      "p95_px": 36.43377052196107,
+      "coverage": 1.0,
+      "N": 109,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000766",
+      "median_px": 29.193486546069305,
+      "p95_px": 34.90291814938986,
+      "coverage": 1.0,
+      "N": 101,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000774",
+      "median_px": 22.586963585779955,
+      "p95_px": 32.03468150587575,
+      "coverage": 1.0,
+      "N": 114,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000791",
+      "median_px": 32.15056992509022,
+      "p95_px": 48.708935418451404,
+      "coverage": 1.0,
+      "N": 107,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000793",
+      "median_px": 36.813225577319756,
+      "p95_px": 41.95358157899389,
+      "coverage": 1.0,
+      "N": 112,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000796",
+      "median_px": 30.775040468090715,
+      "p95_px": 42.68897533119023,
+      "coverage": 1.0,
+      "N": 110,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000797",
+      "median_px": 20.68784867215744,
+      "p95_px": 42.435951492820124,
+      "coverage": 1.0,
+      "N": 121,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000813",
+      "median_px": 35.11051322136896,
+      "p95_px": 43.95998316861996,
+      "coverage": 1.0,
+      "N": 123,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000832",
+      "median_px": 28.08514805918591,
+      "p95_px": 69.88964433739164,
+      "coverage": 1.0,
+      "N": 120,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000837",
+      "median_px": 37.302899800568284,
+      "p95_px": 41.355689658976345,
+      "coverage": 1.0,
+      "N": 120,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000848",
+      "median_px": 21.353138231334118,
+      "p95_px": 34.76975935551829,
+      "coverage": 1.0,
+      "N": 109,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000852",
+      "median_px": 37.45455805831709,
+      "p95_px": 41.351208370145876,
+      "coverage": 1.0,
+      "N": 120,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000867",
+      "median_px": 29.3956668213611,
+      "p95_px": 43.98596742686355,
+      "coverage": 1.0,
+      "N": 115,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000869",
+      "median_px": 23.256711868658602,
+      "p95_px": 40.30337207319382,
+      "coverage": 1.0,
+      "N": 113,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000881",
+      "median_px": 36.40761619545053,
+      "p95_px": 45.68277088391895,
+      "coverage": 1.0,
+      "N": 102,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000884",
+      "median_px": 30.005708186188492,
+      "p95_px": 38.477516196895195,
+      "coverage": 1.0,
+      "N": 126,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000907",
+      "median_px": 28.200594231724555,
+      "p95_px": 40.51077238175559,
+      "coverage": 1.0,
+      "N": 96,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000912",
+      "median_px": 26.99369205269576,
+      "p95_px": 38.46502674985483,
+      "coverage": 1.0,
+      "N": 110,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000916",
+      "median_px": 35.00469619913918,
+      "p95_px": 48.13858878191746,
+      "coverage": 1.0,
+      "N": 125,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000935",
+      "median_px": 27.984670087750228,
+      "p95_px": 52.831835808793784,
+      "coverage": 1.0,
+      "N": 107,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000937",
+      "median_px": 21.495517859222826,
+      "p95_px": 37.946517468603766,
+      "coverage": 1.0,
+      "N": 110,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000945",
+      "median_px": 22.224244462529306,
+      "p95_px": 35.402966415094326,
+      "coverage": 1.0,
+      "N": 128,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000949",
+      "median_px": 17.371956709434652,
+      "p95_px": 31.4032708246099,
+      "coverage": 1.0,
+      "N": 116,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000979",
+      "median_px": 22.35516853414189,
+      "p95_px": 33.05231189651413,
+      "coverage": 1.0,
+      "N": 107,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000981",
+      "median_px": 20.1150439849624,
+      "p95_px": 33.852910758204224,
+      "coverage": 1.0,
+      "N": 127,
+      "flagged": false
+    },
+    {
+      "episode": "episode_000985",
+      "median_px": 34.561461303103655,
+      "p95_px": 41.26467880600184,
+      "coverage": 1.0,
+      "N": 123,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000986",
+      "median_px": 26.32525045290429,
+      "p95_px": 36.610832690683786,
+      "coverage": 1.0,
+      "N": 107,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000988",
+      "median_px": 34.068946043028106,
+      "p95_px": 38.42308803111763,
+      "coverage": 1.0,
+      "N": 111,
+      "flagged": true
+    },
+    {
+      "episode": "episode_000990",
+      "median_px": 23.888874848778933,
+      "p95_px": 31.280369836477846,
+      "coverage": 1.0,
+      "N": 116,
+      "flagged": false
+    }
+  ],
+  "review_required": [
+    "episode_000007",
+    "episode_000010",
+    "episode_000034",
+    "episode_000043",
+    "episode_000048",
+    "episode_000053",
+    "episode_000057",
+    "episode_000058",
+    "episode_000071",
+    "episode_000073",
+    "episode_000076",
+    "episode_000097",
+    "episode_000100",
+    "episode_000103",
+    "episode_000104",
+    "episode_000105",
+    "episode_000111",
+    "episode_000137",
+    "episode_000138",
+    "episode_000140",
+    "episode_000147",
+    "episode_000149",
+    "episode_000153",
+    "episode_000159",
+    "episode_000172",
+    "episode_000176",
+    "episode_000191",
+    "episode_000196",
+    "episode_000201",
+    "episode_000228",
+    "episode_000234",
+    "episode_000242",
+    "episode_000246",
+    "episode_000259",
+    "episode_000280",
+    "episode_000281",
+    "episode_000293",
+    "episode_000295",
+    "episode_000296",
+    "episode_000312",
+    "episode_000317",
+    "episode_000332",
+    "episode_000342",
+    "episode_000354",
+    "episode_000355",
+    "episode_000368",
+    "episode_000389",
+    "episode_000407",
+    "episode_000426",
+    "episode_000446",
+    "episode_000456",
+    "episode_000464",
+    "episode_000468",
+    "episode_000486",
+    "episode_000519",
+    "episode_000521",
+    "episode_000544",
+    "episode_000563",
+    "episode_000576",
+    "episode_000581",
+    "episode_000595",
+    "episode_000598",
+    "episode_000606",
+    "episode_000646",
+    "episode_000661",
+    "episode_000690",
+    "episode_000692",
+    "episode_000702",
+    "episode_000708",
+    "episode_000709",
+    "episode_000712",
+    "episode_000722",
+    "episode_000759",
+    "episode_000766",
+    "episode_000791",
+    "episode_000793",
+    "episode_000796",
+    "episode_000813",
+    "episode_000832",
+    "episode_000837",
+    "episode_000848",
+    "episode_000852",
+    "episode_000867",
+    "episode_000881",
+    "episode_000884",
+    "episode_000907",
+    "episode_000912",
+    "episode_000916",
+    "episode_000935",
+    "episode_000985",
+    "episode_000986",
+    "episode_000988"
+  ]
+}
