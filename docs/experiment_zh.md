@@ -7,6 +7,7 @@
 使用现有上游训练入口，由 `tools/train_entry.py` 增加运行时审计，保持上游文件不变。
 Transformer 全参数更新；VAE、T5、CLIP 冻结。81 帧、480×640、stride 1，不做随机空间裁剪。
 使用 control_ref、first_frame、full_ref 分支输入置零。四卡 DDP bf16，每卡 batch 1，累积 2。
+可训练参数和 AdamW 状态保存为 FP32，计算使用 bf16 autocast；冻结模块使用 bf16。运行时包装器完成精度转换，避免小学习率更新被 bf16 参数存储舍入。
 AdamW lr 1e-5、weight decay 0.03、epsilon 1e-10，constant with warmup，warmup 100，3000 个优化器更新步。
 启用 gradient checkpointing、VAE mini-batch 1、uniform timestep sampling。每 250 步保存，最多保留 12 个 checkpoint，seed 42、8 workers/进程，无 EMA。
 保留作者梯度裁剪实现：阈值从 0.25 衰减至 0.05，并带异常梯度处理。
@@ -19,14 +20,14 @@ DDP OOM 时使用 `--memory low_vram`；ZeRO-2 留待需要时实现和重新冒
 
 ```bash
 source .env
-CUDA_VISIBLE_DEVICES=4 "$SIM2REAL_REPO/.venv/bin/python" tools/infer.py \
+CUDA_VISIBLE_DEVICES="${SIM2REAL_GPUS%%,*}" "$SIM2REAL_REPO/.venv/bin/python" tools/infer.py \
   --ckpt pretrained --split val --shard 0 --num_shards 4 \
   --guidance_scale 1 --steps 50 --shift 3 --seed 42 --output "$SIM2REAL_ROOT/eval/example"
 ```
 
 CLI 支持 `--first_segment_only`；`--ckpt` 可指向完整 checkpoint 或 Transformer safetensors。严格校验全部键名和形状。
 四卡完整推理与指标通过 `bash scripts/eval_shards.sh OUTPUT val CKPT CFG SHIFT full` 启动。
-所有任务默认限定 GPU 4–7；启动前检查其他任务占用。
+训练和评估设备通过 `.env` 中 `SIM2REAL_GPUS` 配置，单卡冒烟使用列表中的第一张卡。
 
 每段控制张量 `[1,3,L,480,640]`，首帧条件 `[1,3,1,480,640]`，clip_image 为同一帧 PIL RGB，ref_image=None。
 关闭 TeaCache，完整模型加载。Flow Euler 每段重新构造并设置 shift，记录实际 timesteps/sigmas。

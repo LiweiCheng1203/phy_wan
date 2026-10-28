@@ -12,10 +12,10 @@ CUDA_VISIBLE_DEVICES=4 MUJOCO_GL=egl MUJOCO_EGL_DEVICE_ID=4 \
 .venv-data/bin/python tools/qc_alignment.py
 ```
 
-MuJoCo EGL 设备编号与 CUDA 可见编号并不必然相同，在本机已经核实使用上述物理设备映射；更换服务器后需核实 EGL 实际 GPU。只回放保存状态并执行 `mj_forward`，不重新积分。时间为 `clip(pts + capture_state_offset_s)`，保留偏移原始精度，free/ball 旋转使用 Slerp。关闭文字、阴影和分割抗锯齿。
+MuJoCo EGL 设备编号与 CUDA 可见编号并不必然相同。上面编号仅为示例，请在自己的服务器核实 EGL 实际 GPU 后替换。只回放保存状态并执行 `mj_forward`，不重新积分。时间为 `clip(pts + capture_state_offset_s)`，保留偏移原始精度，free/ball 旋转使用 Slerp。关闭文字、阴影和分割抗锯齿。
 
 质检会生成每条叠加视频、8 帧接触表和蓝杯质心评分。对所有异常及固定随机 10 条复核，决策写入 `reports/qc_review.json`。
-本仓库附带的复核和划分仅适用于当前这批数据；更换输入数据需要重新复核并建立独立实验目录，不能套用旧结论。
+复核报告只保存在本机，不随代码分发。仓库附带划分仅适用于配套数据；更换输入数据需要重新复核并建立独立实验目录。
 
 ```bash
 # 仅在当前数据的质检及复核完整时执行。拒绝覆盖不同划分。

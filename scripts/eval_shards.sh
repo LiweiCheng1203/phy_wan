@@ -11,22 +11,25 @@ shift=${5:-3}
 first=${6:-full}
 export PYTHONPATH="$REPO:$TASK_ROOT/tools" OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=1 TOKENIZERS_PARALLELISM=false
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export VIDEOX_ATTENTION_TYPE=SDPA
 mkdir -p "$output"
 extra=()
 if [ "$first" = first ]; then extra+=(--first_segment_only); fi
 jobs=()
-for shard in 0 1 2 3; do
-  gpu=$((shard+4))
+IFS=',' read -r -a devices <<< "${SIM2REAL_GPUS:-4,5,6,7}"
+num_shards=${#devices[@]}
+for shard in "${!devices[@]}"; do
+  gpu=${devices[$shard]}
   (
     export CUDA_VISIBLE_DEVICES=$gpu
     if [ "$ckpt" != static ]; then
       "$REPO/.venv/bin/python" "$TASK_ROOT/tools/infer.py" --output "$output" --split "$split" \
-        --ckpt "$ckpt" --guidance_scale "$cfg" --shift "$shift" --shard "$shard" --num_shards 4 "${extra[@]}"
+        --ckpt "$ckpt" --guidance_scale "$cfg" --shift "$shift" --shard "$shard" --num_shards "$num_shards" "${extra[@]}"
     fi
     static=()
     if [ "$ckpt" = static ]; then static+=(--static); fi
     "$REPO/.venv/bin/python" "$TASK_ROOT/tools/evaluate.py" --output "$output" --split "$split" \
-      --shard "$shard" --num_shards 4 "${static[@]}"
+      --shard "$shard" --num_shards "$num_shards" "${static[@]}"
   ) > "$output/shard_$shard.log" 2>&1 &
   jobs+=("$!")
 done

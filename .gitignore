@@ -18,9 +18,9 @@ best_transformer/
 metadata_*.json
 inventory.json
 reports/*
-!reports/qc_report.json
-!reports/qc_review.json
-!reports/preparation_status.json
+configs/final_selection.json
+tools/preflight.py
+tools/prefetch_torch_dependencies.py
 *.mp4
 *.png
 *.jpg

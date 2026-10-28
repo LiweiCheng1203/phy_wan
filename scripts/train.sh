@@ -11,11 +11,12 @@ save_every=${4:-250}
 resume=${5:-none}
 memory=${6:-ddp}
 metadata=${7:-metadata_train.json}
-export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-4,5,6,7}
+export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-${SIM2REAL_GPUS:-4,5,6,7}}
 export PYTHONPATH="$REPO:$TASK_ROOT/tools"
 export SIM2REAL_AUDIT="$TASK_ROOT/runs/$name/audit"
 export OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=1 TOKENIZERS_PARALLELISM=false
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export VIDEOX_ATTENTION_TYPE=SDPA
 mkdir -p "$TASK_ROOT/runs/$name"
 cd "$REPO"
 launch=(.venv/bin/accelerate launch --num_processes "$workers" --num_machines 1 --mixed_precision bf16 --main_process_port 29647)

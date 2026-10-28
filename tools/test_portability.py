@@ -82,3 +82,28 @@ def test_episode_seed_independent_of_sharding():
     serial = {ep: [segment_seed(42, ep, i) for i in range(3)] for ep in episodes}
     shards = {ep: [segment_seed(42, ep, i) for i in range(3)] for shard in range(4) for ep in episodes[shard::4]}
     assert serial == shards
+
+
+def test_evaluation_uses_configured_gpu_list(tmp_path):
+    import json
+    import os
+    from pathlib import Path
+    import subprocess
+    import sys
+
+    repo = tmp_path / "upstream"
+    python = repo / ".venv/bin/python"
+    python.parent.mkdir(parents=True)
+    python.write_text(f"#!{sys.executable}\n" +
+        "import json, os, sys\n" +
+        "print(json.dumps({'gpu': os.environ.get('CUDA_VISIBLE_DEVICES'), 'argv': sys.argv[1:]}))\n")
+    python.chmod(0o755)
+    output = tmp_path / "output"
+    script = Path(__file__).resolve().parents[1] / "scripts/eval_shards.sh"
+    subprocess.run(["bash", str(script), str(output), "val", "pretrained"], check=True, capture_output=True,
+                   env={**os.environ, "SIM2REAL_ROOT": str(tmp_path), "SIM2REAL_REPO": str(repo), "SIM2REAL_GPUS": "2,5"})
+    for shard, gpu in enumerate(["2", "5"]):
+        calls = [json.loads(line) for line in (output / f"shard_{shard}.log").read_text().splitlines()]
+        assert len(calls) == 2 and all(call["gpu"] == gpu for call in calls)
+        assert all(call["argv"][call["argv"].index("--shard") + 1] == str(shard) for call in calls)
+        assert all(call["argv"][call["argv"].index("--num_shards") + 1] == "2" for call in calls)

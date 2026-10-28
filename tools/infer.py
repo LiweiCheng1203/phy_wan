@@ -14,9 +14,7 @@ from common import (DATA, MODEL, PROMPT, REPO, ROOT, decode, encode, fingerprint
                     read_json, reference_video, segment_seed, segments, sha256, write_json)
 
 
-def checkpoint_state(path):
-    import torch
-    from safetensors.torch import load_file
+def checkpoint_files(path):
     path = Path(path)
     if (path / "transformer").is_dir():
         path = path / "transformer"
@@ -30,6 +28,13 @@ def checkpoint_state(path):
                 files = [path / "diffusion_pytorch_model.bin"]
     else:
         files = [path]
+    return files
+
+
+def checkpoint_state(path):
+    import torch
+    from safetensors.torch import load_file
+    files = checkpoint_files(path)
     state = {}
     for f in files:
         part = load_file(str(f)) if f.suffix == ".safetensors" else torch.load(f, map_location="cpu", weights_only=True)
@@ -55,11 +60,14 @@ def strict_load(transformer, path):
 def scheduler_for(config, shift):
     from diffusers import FlowMatchEulerDiscreteScheduler
     options = dict(config)
+    # Upstream YAML includes a repository path hint, not a scheduler argument.
+    options.pop("scheduler_subpath", None)
     options.update(shift=shift, use_dynamic_shifting=False)
     return FlowMatchEulerDiscreteScheduler(**options)
 
 
-def load_pipeline(ckpt):
+def load_pipeline(ckpt, device="cuda"):
+    os.environ.setdefault("VIDEOX_ATTENTION_TYPE", "SDPA")
     import torch
     from omegaconf import OmegaConf
     from transformers import AutoTokenizer
@@ -80,7 +88,7 @@ def load_pipeline(ckpt):
     tokenizer = AutoTokenizer.from_pretrained(str(MODEL / tk.get("tokenizer_subpath", "tokenizer")), local_files_only=True)
     pipe = WanFunControlPipeline(transformer=transformer, vae=vae, tokenizer=tokenizer,
         text_encoder=text, clip_image_encoder=clip, scheduler=scheduler_for(cfg["scheduler_kwargs"], 3))
-    pipe.to("cuda")
+    pipe.to(device)
     for model in [transformer, vae, text, clip]:
         model.requires_grad_(False)
         model.eval()
@@ -114,11 +122,18 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     signature = fingerprint({"ckpt": args.ckpt, "config": {k: v for k, v in vars(args).items()
         if k not in ["shard", "num_shards", "limit", "output"]}, "split": sha256(ROOT / "split.json"),
+        "checkpoint_sha256": {str(f): sha256(f) for f in checkpoint_files(MODEL if args.ckpt == "pretrained" else args.ckpt)},
+        "pipeline_config": sha256(REPO / "config/wan2.1/wan_civitai.yaml"),
         "implementation": sha256(__file__), "common": sha256(Path(__file__).with_name("common.py"))})
     remaining = []
+    signatures = {}
     for episode in episodes:
+        folder = DATA / episode
+        signatures[episode] = fingerprint({"run": signature, "inputs": {
+            name: sha256(folder / name) for name in ["sim.mp4", "first_frame.png"]},
+            "reference": sha256(reference_video(episode, read_json(folder / "meta.json")))})
         meta = args.output / episode / "generation.json"
-        if meta.exists() and read_json(meta).get("signature") == signature:
+        if meta.exists() and read_json(meta).get("signature") == signatures[episode]:
             prior = read_json(meta)
             if all((meta.parent / n).exists() and sha256(meta.parent / n) == h for n, h in prior["output_sha256"].items()):
                 print("REUSE", episode, flush=True)
@@ -172,7 +187,7 @@ def main():
         encode(out / "generated.mp4", export)
         real = decode(reference_video(episode, read_json(folder / "meta.json")))[:expected]
         encode(out / "triptych.mp4", np.concatenate([real, sim[:expected], export], axis=2))
-        write_json(out / "generation.json", {"signature": signature, "episode": episode, "N": expected,
+        write_json(out / "generation.json", {"signature": signatures[episode], "episode": episode, "N": expected,
             "ckpt": args.ckpt, "checkpoint_sha256": weight_hashes, "guidance_scale": args.guidance_scale,
             "shift": args.shift, "steps": args.steps, "seed": args.seed, "segments": details,
             "seconds": time.monotonic() - begin, "peak_cuda_bytes": torch.cuda.max_memory_allocated(),

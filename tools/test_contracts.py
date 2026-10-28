@@ -28,7 +28,8 @@ def test_seeds_independent_of_shards_and_order():
 
 
 def test_actual_shift_changes_schedule():
-    a, b = scheduler_for({"num_train_timesteps": 1000}, 3), scheduler_for({"num_train_timesteps": 1000}, 5)
+    config = {"num_train_timesteps": 1000, "scheduler_subpath": None, "shift": 5.0}
+    a, b = scheduler_for(config, 3), scheduler_for(config, 5)
     a.set_timesteps(50)
     b.set_timesteps(50)
     assert not np.allclose(a.timesteps.numpy(), b.timesteps.numpy())
@@ -69,3 +70,20 @@ def test_checkpoint_selection_action_band():
                   dict(name="b", action_score=11.9, fg_lpips=.1, step=1000),
                   dict(name="c", action_score=12.1, fg_lpips=.01, step=1500)]
     assert rank_candidates(candidates)[0]["name"] == "b"
+
+
+def test_fp32_optimizer_preserves_small_updates():
+    import torch
+    from training_precision import prepare_full_precision_parameters
+    model = torch.nn.Linear(2, 1).to(torch.bfloat16)
+    with torch.no_grad():
+        model.weight.fill_(1)
+        model.bias.fill_(1)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-5, eps=1e-10, weight_decay=.03)
+    prepare_full_precision_parameters(model, optimizer)
+    for parameter in model.parameters():
+        parameter.grad = torch.ones_like(parameter)
+    optimizer.step()
+    assert (model.weight < 1).all() and model.weight.dtype == torch.float32
+    assert all(state["exp_avg"].dtype == torch.float32 and state["exp_avg_sq"].dtype == torch.float32
+               for state in optimizer.state.values())

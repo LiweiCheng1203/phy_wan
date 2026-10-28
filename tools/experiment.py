@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import time
 
-from common import REPO, ROOT, fingerprint, read_json, sha256, write_json
+from common import HSV, REPO, ROOT, fingerprint, read_json, sha256, write_json
 
 
 def run(stage, cmd, env=None):
@@ -62,7 +62,7 @@ def main():
     python = str(REPO / ".venv/bin/python")
     train = str(ROOT / "scripts/train.sh")
     if not args.skip_smoke:
-        env = {**os.environ, "CUDA_VISIBLE_DEVICES": "4"}
+        env = {**os.environ, "CUDA_VISIBLE_DEVICES": os.environ.get("SIM2REAL_GPUS", "4,5,6,7").split(",")[0]}
         run("smoke_single_10", ["bash", train, "smoke_single", "1", "10", "10", "none", args.memory, "metadata_smoke.json"], env)
         run("smoke_single_resume_20", ["bash", train, "smoke_single", "1", "20", "10", "checkpoint-10", args.memory, "metadata_smoke.json"], env)
         run("smoke_ddp_4", ["bash", train, "smoke_ddp", "4", "4", "2", "none", args.memory, "metadata_smoke.json"])
@@ -105,7 +105,7 @@ def main():
     final, zero = rank_candidates(full)[0], rank_candidates(baseline)[0]
     frozen = {"best": final, "pretrained": zero, "full_candidates": full, "baseline_candidates": baseline,
         "rule": "action_score=episode_macro(median_penalized+0.25*p95_penalized); within 2px choose fg_lpips, then action, then earlier step",
-        "split_sha256": sha256(ROOT / "split.json"), "hsv": read_json(ROOT / "reports/qc_report.json")["hsv"],
+        "split_sha256": sha256(ROOT / "split.json"), "hsv": HSV,
         "inference_sha256": sha256(ROOT / "tools/infer.py"), "metric_sha256": sha256(ROOT / "tools/evaluate.py")}
     frozen_path = ROOT / "configs/final_selection.json"
     if frozen_path.exists():

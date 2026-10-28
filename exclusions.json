@@ -1,77 +1,14 @@
 [
-  {
-    "episode": "episode_000074",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000074",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000146",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000146",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000200",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000200",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000221",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000221",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000260",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000260",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000315",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000315",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000328",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000328",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000334",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000334",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000420",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000420",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000579",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000579",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000733",
-    "source": "/data/clw/AgentGarten/gensim/ur5-1/output/episode_000733",
-    "contact_check_pass": false,
-    "reason": "contact_check_failed"
-  },
-  {
-    "episode": "episode_000389",
-    "reason": "visual_qc_failed",
-    "review": {
-      "include": false,
-      "evidence": "review_board_07.jpg",
-      "reason": "Release mismatch in full 8-frame review: at frames 90 and 108 the real blue cup is inserted while the simulated cup remains raised under the gripper. Exclude replay discrepancy."
-    }
-  }
+  {"episode": "episode_000074", "reason": "contact_check_failed"},
+  {"episode": "episode_000146", "reason": "contact_check_failed"},
+  {"episode": "episode_000200", "reason": "contact_check_failed"},
+  {"episode": "episode_000221", "reason": "contact_check_failed"},
+  {"episode": "episode_000260", "reason": "contact_check_failed"},
+  {"episode": "episode_000315", "reason": "contact_check_failed"},
+  {"episode": "episode_000328", "reason": "contact_check_failed"},
+  {"episode": "episode_000334", "reason": "contact_check_failed"},
+  {"episode": "episode_000420", "reason": "contact_check_failed"},
+  {"episode": "episode_000579", "reason": "contact_check_failed"},
+  {"episode": "episode_000733", "reason": "contact_check_failed"},
+  {"episode": "episode_000389", "reason": "visual_qc_failed"}
 ]

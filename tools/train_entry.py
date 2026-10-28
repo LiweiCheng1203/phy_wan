@@ -12,6 +12,7 @@ from accelerate import Accelerator
 
 from common import REPO, ROOT, sha256
 from infer import strict_load
+from training_precision import prepare_full_precision_parameters
 
 sys.path.insert(0, str(REPO))
 from videox_fun.models import WanTransformer3DModel
@@ -34,6 +35,8 @@ original_load = WanTransformer3DModel.from_pretrained.__func__
 
 @classmethod
 def checked_load(cls, path, *args, **kwargs):
+    # Resume checkpoints contain FP32 training weights; avoid rounding them on load.
+    kwargs["torch_dtype"] = torch.float32
     model = original_load(cls, path, *args, **kwargs)
     directory = Path(path) / kwargs.get("subfolder", "")
     hashes = strict_load(model, directory)
@@ -88,6 +91,8 @@ def checked_prepare(acc, *args, **kwargs):
     optimizers = [x for x in args if isinstance(x, torch.optim.Optimizer)]
     if models and optimizers:
         model, optimizer = models[0], optimizers[0]
+        precision = prepare_full_precision_parameters(model, optimizer)
+        record("training_precision", **precision)
         train_ids = {id(p) for p in model.parameters() if p.requires_grad}
         all_ids = {id(p) for p in model.parameters()}
         optimized = [id(p) for group in optimizer.param_groups for p in group["params"]]
