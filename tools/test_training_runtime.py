@@ -60,3 +60,94 @@ def test_missing_training_generators_rejected(tmp_path):
     import pytest
     with pytest.raises(FileNotFoundError, match="custom training generator"):
         load_training_generators(tmp_path, 0, {})
+
+
+NOISE_TRAINER = '''
+from types import SimpleNamespace
+import numpy as np
+import torch
+def main():
+    args = SimpleNamespace(seed=1, max_train_steps=2)
+    accelerator = SimpleNamespace(device="cpu", process_index=0)
+    index_rng = np.random.default_rng(np.random.PCG64(43))
+    global_step = 0
+    seen = []
+    for epoch in range(2):
+        for batch in range(3):
+            latents = torch.zeros(2, 4, 3, 2, 2)
+            ref_latents = torch.ones(2, 4, 1, 2, 2)
+            ref_latents_conv_in = torch.zeros_like(latents)
+            ref_latents_conv_in[:, :, :1] = ref_latents
+            seen.append(ref_latents_conv_in.clone())
+            global_step += 1
+            if global_step >= args.max_train_steps:
+                break
+    return seen, cond_noise_rng
+'''
+
+
+def test_condition_noise_patch_applies_once_per_batch(tmp_path):
+    source = tmp_path / "trainer.py"
+    source.write_text(NOISE_TRAINER)
+    original = source.read_bytes()
+    calls = []
+    namespace = {"_sim2real_condition_noise": lambda latent, generator: calls.append(generator) or latent + 1}
+    exec(compile_training_program(source, condition_noise=True), namespace)
+    seen, generator = namespace["main"]()
+    assert len(seen) == len(calls) == 2
+    assert all(g is generator for g in calls) and isinstance(generator, torch.Generator)
+    assert all(torch.all(x[:, :, :1] == 2) and torch.all(x[:, :, 1:] == 0) for x in seen)
+    assert source.read_bytes() == original
+    source.write_text(NOISE_TRAINER.replace("return seen, cond_noise_rng", "return seen, None"))
+    namespace = {}
+    exec(compile_training_program(source), namespace)
+    assert torch.all(namespace["main"]()[0][0][:, :, :1] == 1)
+
+
+def test_condition_noise_patch_requires_unique_target(tmp_path):
+    import pytest
+    source = tmp_path / "trainer.py"
+    for text in [NOISE_TRAINER.replace("ref_latents_conv_in[:, :, :1] = ref_latents\n", "pass\n"),
+                 NOISE_TRAINER.replace("ref_latents_conv_in[:, :, :1] = ref_latents\n",
+                                       "ref_latents_conv_in[:, :, :1] = ref_latents\n"
+                                       "            ref_latents_conv_in[:, :, :1] = ref_latents\n"),
+                 NOISE_TRAINER.replace("    index_rng = np.random.default_rng(np.random.PCG64(43))\n", "")]:
+        source.write_text(text)
+        with pytest.raises(RuntimeError, match="condition noise patch"):
+            compile_training_program(source, condition_noise=True)
+
+
+def test_pinned_upstream_accepts_condition_noise():
+    import pytest
+    from common import REPO
+    trainer = REPO / "scripts/wan2.1_fun/train_control.py"
+    if not trainer.exists():
+        pytest.skip("Pinned upstream trainer not available")
+    compile_training_program(trainer, condition_noise=True)
+
+
+def test_condition_noise_statistics():
+    from condition_noise import apply_condition_noise
+    latent = torch.randn(4000, 2, 1, 3, 3).to(torch.bfloat16)
+    same, sigma = apply_condition_noise(latent, torch.Generator().manual_seed(0), 0., .3)
+    assert torch.equal(same, latent) and torch.all(sigma == 0)
+    a, sigma = apply_condition_noise(latent, torch.Generator().manual_seed(0), .75, .3)
+    b, _ = apply_condition_noise(latent, torch.Generator().manual_seed(0), .75, .3)
+    assert torch.equal(a, b) and a.dtype == torch.bfloat16 and a.shape == latent.shape
+    assert sigma.min() >= 0 and sigma.max() <= .3
+    assert abs((sigma == 0).float().mean().item() - .25) < .03
+    noised = sigma > .05
+    residual = (a.float() - latent.float())[noised] / sigma[noised].view(-1, 1, 1, 1, 1)
+    assert abs(residual.std().item() - 1) < .05
+    assert torch.equal(a[sigma == 0], latent[sigma == 0])
+
+
+def test_condition_noise_generator_continues_after_restore(tmp_path):
+    scope = dict(cond_noise_rng=torch.Generator().manual_seed(45))
+    torch.rand(3, generator=scope["cond_noise_rng"])
+    save_training_generators(tmp_path, 1, scope)
+    expected = torch.rand(10, generator=scope["cond_noise_rng"])
+    load_training_generators(tmp_path, 1, scope)
+    assert torch.equal(torch.rand(10, generator=scope["cond_noise_rng"]), expected)
+    with __import__("pytest").raises(KeyError):
+        load_training_generators(tmp_path, 1, {})

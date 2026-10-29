@@ -111,6 +111,7 @@ def main():
     parser.add_argument("--shift", type=float, default=3)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--first_segment_only", action="store_true")
+    parser.add_argument("--segment_frames", type=int, default=81, help="Frames per segment (4k+1), overlap 1")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
@@ -152,7 +153,7 @@ def main():
         first = np.array(Image.open(folder / "first_frame.png").convert("RGB"))
         condition = tensor_video(first[None])
         chunks, details = [], []
-        for i, (start, count, padded) in enumerate(segments(len(sim))):
+        for i, (start, count, padded) in enumerate(segments(len(sim), args.segment_frames)):
             if args.first_segment_only and i:
                 break
             control = sim[start:start + count]
@@ -177,7 +178,7 @@ def main():
                 "timesteps": pipe.scheduler.timesteps.detach().cpu().float().tolist(),
                 "sigmas": pipe.scheduler.sigmas.detach().cpu().float().tolist()})
         generated = np.concatenate(chunks)
-        expected = min(81, len(sim)) if args.first_segment_only else len(sim)
+        expected = min(args.segment_frames, len(sim)) if args.first_segment_only else len(sim)
         assert generated.shape == (expected, 480, 640, 3), generated.shape
         # Float32 .npy preserves the pipeline output for metrics, before video quantization.
         with open(out / "frames.partial.npy", "wb") as f:
@@ -189,7 +190,8 @@ def main():
         encode(out / "triptych.mp4", np.concatenate([real, sim[:expected], export], axis=2))
         write_json(out / "generation.json", {"signature": signatures[episode], "episode": episode, "N": expected,
             "ckpt": args.ckpt, "checkpoint_sha256": weight_hashes, "guidance_scale": args.guidance_scale,
-            "shift": args.shift, "steps": args.steps, "seed": args.seed, "segments": details,
+            "shift": args.shift, "steps": args.steps, "seed": args.seed,
+            "segment_frames": args.segment_frames, "segments": details,
             "seconds": time.monotonic() - begin, "peak_cuda_bytes": torch.cuda.max_memory_allocated(),
             "output_sha256": {name: sha256(out / name) for name in ["frames.npy", "generated.mp4", "triptych.mp4"]}})
         print("GENERATED", episode, expected, round(time.monotonic() - begin, 1), flush=True)

@@ -87,3 +87,23 @@ def test_fp32_optimizer_preserves_small_updates():
     assert (model.weight < 1).all() and model.weight.dtype == torch.float32
     assert all(state["exp_avg"].dtype == torch.float32 and state["exp_avg_sq"].dtype == torch.float32
                for state in optimizer.state.values())
+
+
+@pytest.mark.parametrize("n", [2, 9, 10, 90, 115, 164])
+def test_short_segment_coverage(n):
+    output, starts = [], []
+    for i, (start, count, padded) in enumerate(segments(n, 9)):
+        assert 2 <= count <= 9 and count <= padded <= 9 and padded % 4 == 1
+        starts.append(start)
+        indices = list(range(start, start + count))
+        output += indices if i == 0 else indices[1:]
+    assert output == list(range(n))
+    assert all(b - a == 8 for a, b in zip(starts, starts[1:]))
+    if n == 115:
+        assert len(starts) == 15 and list(segments(n, 9))[-1] == (112, 3, 5)
+
+
+@pytest.mark.parametrize("length", [1, 4, 8, 10])
+def test_segment_length_must_be_4k_plus_1(length):
+    with pytest.raises(ValueError, match="4k\\+1"):
+        list(segments(20, length))

@@ -103,12 +103,14 @@ def encode(path, frames, crf=12):
     return info
 
 
-def segments(n):
+def segments(n, length=81):
     if n < 2:
         raise ValueError("At least two frames required")
+    if length < 5 or length % 4 != 1:
+        raise ValueError(f"Segment length must be 4k+1 and at least 5, got {length}")
     start = 0
     while start < n - 1:
-        count = min(81, n - start)
+        count = min(length, n - start)
         padded = 4 * ((count - 1 + 3) // 4) + 1
         yield start, count, padded
         start += count - 1

@@ -37,6 +37,7 @@ frozenlist==1.8.0
 fsspec==2026.9.0
 ftfy==6.3.1
 func-timeout==4.3.5
+googleapis-common-protos==1.75.5
 gradio==6.17.3
 gradio-client==2.5.0
 groovy==0.1.2
@@ -91,6 +92,13 @@ onnxruntime==1.23.2
 opencv-python==4.12.0.88
 opencv-python-headless==4.12.0.88
 opentelemetry-api==1.45.1
+opentelemetry-exporter-http-transport==0.66b1
+opentelemetry-exporter-otlp-common==0.66b1
+opentelemetry-exporter-otlp-proto-common==1.45.1
+opentelemetry-exporter-otlp-proto-http==1.45.1
+opentelemetry-proto==1.45.1
+opentelemetry-sdk==1.45.1
+opentelemetry-semantic-conventions==0.66b1
 orjson==3.13.0
 packaging==26.3
 pandas==2.3.3
@@ -158,6 +166,7 @@ typing-inspection==0.4.4
 tzdata==2026.5
 urllib3==2.8.0
 uvicorn==0.54.0
+wandb==0.30.0
 wcwidth==0.9.4
 werkzeug==3.1.9
 xxhash==4.0.2

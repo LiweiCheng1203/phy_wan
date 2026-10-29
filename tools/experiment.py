@@ -9,14 +9,15 @@ import time
 from common import HSV, REPO, ROOT, fingerprint, read_json, sha256, write_json
 
 
-def run(stage, cmd, env=None):
+def run(stage, cmd, env=None, status=None):
+    status = status or ROOT / "reports/experiment_status.json"
     done = ROOT / "runs/stages" / (stage + ".json")
     signature = fingerprint(cmd)
     if done.exists():
         assert read_json(done)["signature"] == signature, f"Stage command changed: {stage}"
         print("STAGE_REUSE", stage, flush=True)
         return
-    write_json(ROOT / "reports/experiment_status.json", {"stage": stage, "status": "running", "command": cmd, "started_unix": time.time()})
+    write_json(status, {"stage": stage, "status": "running", "command": cmd, "started_unix": time.time()})
     print("STAGE_BEGIN", stage, cmd, flush=True)
     begin = time.monotonic()
     log = ROOT / "logs" / (stage + ".log")
@@ -24,7 +25,7 @@ def run(stage, cmd, env=None):
         with open(log, "a") as f:
             subprocess.run(cmd, cwd=REPO, env=env, stdout=f, stderr=subprocess.STDOUT, check=True)
     except BaseException as exc:
-        write_json(ROOT / "reports/experiment_status.json", {"stage": stage, "status": "failed", "log": str(log), "error": str(exc)})
+        write_json(status, {"stage": stage, "status": "failed", "log": str(log), "error": str(exc)})
         print(f"STAGE_FAILED {stage}: {log}", flush=True)
         print("\n".join(log.read_text(errors="replace").splitlines()[-80:]), flush=True)
         raise
