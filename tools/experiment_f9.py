@@ -20,7 +20,9 @@ PROBE_BATCHES = [16, 12, 8]
 PEAK_LIMIT_BYTES = 70e9
 SETTINGS = {"SIM2REAL_FRAMES": "9", "SIM2REAL_VAE_MINI_BATCH": "4", "SIM2REAL_CKPT_LIMIT": "6",
             "SIM2REAL_PORT": "29651", "SIM2REAL_COND_NOISE_PROB": "0.75", "SIM2REAL_COND_NOISE_SIGMA": "0.3",
-            "SIM2REAL_REPORT_TO": "wandb", "WANDB_PROJECT": "phy_wan"}
+            "SIM2REAL_REPORT_TO": "wandb", "WANDB_PROJECT": "phy_wan",
+            # The system profile points this at an unwritable shared directory.
+            "WANDB_CACHE_DIR": str(ROOT / ".cache/wandb")}
 
 
 def command(name, gpus, steps, save_every, resume, metadata, batch, accum, **env):
