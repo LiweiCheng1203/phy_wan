@@ -55,9 +55,11 @@ runtime_parser.add_argument("--output_dir", required=True)
 runtime_parser.add_argument("--max_train_steps", required=True, type=int)
 runtime_parser.add_argument("--checkpointing_steps", type=int, default=250)
 runtime_parser.add_argument("--video_sample_n_frames", required=True, type=int)
+runtime_parser.add_argument("--fix_sample_size", required=True, type=int, nargs=2)
 runtime_args, _ = runtime_parser.parse_known_args()
 frames = runtime_args.video_sample_n_frames
 assert frames % 4 == 1, f"Wan VAE needs 4k+1 frames, got {frames}"
+height, width = runtime_args.fix_sample_size
 
 
 def record(event, **values):
@@ -107,7 +109,7 @@ def checked_iter(loader):
     for index, batch in enumerate(original_iter(loader)):
         if index == 0 and isinstance(batch, dict) and "ref_pixel_values" in batch:
             shape = list(batch["pixel_values"].shape)
-            assert shape[1:] == [frames, 3, 480, 640], shape
+            assert shape[1:] == [frames, 3, height, width], shape
             assert batch["control_pixel_values"].shape == batch["pixel_values"].shape
             assert torch.equal(batch["ref_pixel_values"], batch["pixel_values"][:, :1])
             assert torch.all(batch["clip_idx"] == 0)
@@ -181,7 +183,7 @@ original_init_trackers = Accelerator.init_trackers
 
 def checked_init_trackers(acc, project_name, config=None, init_kwargs=None):
     # The private options never reach upstream args, so add them to the tracker config here.
-    config = {**(config or {}), "window_frames": frames, "cond_noise_prob": private_args.cond_noise_prob,
+    config = {**(config or {}), "window_frames": frames, "frame_size": [height, width], "cond_noise_prob": private_args.cond_noise_prob,
               "cond_noise_sigma_max": private_args.cond_noise_sigma_max, "launch_argv": " ".join(launch_argv)}
     return original_init_trackers(acc, project_name, config=config, init_kwargs=init_kwargs or {})
 
@@ -262,7 +264,7 @@ trainer_path = REPO / "scripts/wan2.1_fun/train_control.py"
 record("runtime_corrections", epoch_stop_guard=True, per_rank_random_states=True, condition_noise=condition_noise)
 record("condition_noise_config", enabled=condition_noise, prob=private_args.cond_noise_prob,
        sigma_max=private_args.cond_noise_sigma_max, target="ref_latents_conv_in[:, :, :1]", clip_image="clean",
-       window_frames=frames)
+       window_frames=frames, frame_size=[height, width])
 namespace = {"__name__": "__main__", "__file__": str(trainer_path)}
 if condition_noise:
     namespace["_sim2real_condition_noise"] = checked_condition_noise

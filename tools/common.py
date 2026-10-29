@@ -16,6 +16,9 @@ SOURCE = Path(os.environ.get("SIM2REAL_SOURCE", str(ROOT / "sources"))).resolve(
 REPO = Path(os.environ.get("SIM2REAL_REPO", str(ROOT.parent / "VideoX-Fun"))).resolve()
 MODEL = Path(os.environ.get("SIM2REAL_MODEL", str(REPO / "model/Wan2.1-Fun-V1.1-1.3B-Control"))).resolve()
 PROMPT = "A real-world video of a UR5 robot arm with a two-finger gripper picking up the blue cup and putting it into the brown cup on a wooden table."
+DUAL_PROMPT = ("Two synchronized real-world camera views side by side. Left: external view of a UR5 robot arm with a "
+               "two-finger gripper picking up the blue cup and putting it into the brown cup on a wooden table. "
+               "Right: the gripper's wrist camera view.")
 HSV = {"lower": [90, 60, 40], "upper": [135, 255, 255], "min_pixels": 20}
 
 
@@ -72,21 +75,24 @@ def probe(path):
         "-of", "json", str(path)]))["streams"][0]
 
 
-def decode(path):
+def decode(path, height=480, width=640):
     raw = subprocess.check_output([
         "ffmpeg", "-v", "error", "-threads", "1", "-i", str(path),
         "-threads", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"])
-    return np.frombuffer(raw, np.uint8).reshape(-1, 480, 640, 3).copy()
+    return np.frombuffer(raw, np.uint8).reshape(-1, height, width, 3).copy()
 
 
-def encode(path, frames, crf=12):
+def encode(path, frames, crf=12, lossless=False):
     path = Path(path)
     temp = path.with_name(path.stem + ".partial.mp4")
     height, width = frames.shape[1:3]
+    # Lossless RGB H.264 with short GOPs: exact frames and cheap random window seeks.
+    codec = (["-c:v", "libx264rgb", "-qp", "0", "-g", "10", "-pix_fmt", "rgb24"] if lossless else
+             ["-c:v", "libx264", "-crf", str(crf), "-pix_fmt", "yuv420p"])
     p = subprocess.Popen([
         "ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
-        "-s", f"{width}x{height}", "-r", "5", "-i", "-", "-an", "-c:v", "libx264",
-        "-threads", "1", "-preset", "fast", "-crf", str(crf), "-pix_fmt", "yuv420p",
+        "-s", f"{width}x{height}", "-r", "5", "-i", "-", "-an", *codec[:2],
+        "-threads", "1", "-preset", "fast", *codec[2:],
         "-movflags", "+faststart", str(temp)], stdin=subprocess.PIPE)
     try:
         for frame in frames:

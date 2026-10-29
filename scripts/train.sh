@@ -13,6 +13,8 @@ memory=${6:-ddp}
 metadata=${7:-metadata_train.json}
 # Optional overrides; defaults reproduce Run A exactly.
 frames=${SIM2REAL_FRAMES:-81}
+height=${SIM2REAL_HEIGHT:-480}
+width=${SIM2REAL_WIDTH:-640}
 batch=${SIM2REAL_BATCH:-1}
 accum=${SIM2REAL_ACCUM:-2}
 loader_workers=${SIM2REAL_LOADER_WORKERS:-8}
@@ -48,7 +50,7 @@ exec "${launch[@]}" "$TASK_ROOT/tools/train_entry.py" \
   --config_path config/wan2.1/wan_civitai.yaml \
   --pretrained_model_name_or_path "$MODEL" \
   --train_data_dir '' --train_data_meta "$TASK_ROOT/$metadata" \
-  --enable_bucket --fix_sample_size 480 640 \
+  --enable_bucket --fix_sample_size "$height" "$width" \
   --video_sample_size 640 --image_sample_size 640 --token_sample_size 640 \
   --video_sample_stride 1 --video_sample_n_frames "$frames" --video_repeat 1 \
   --train_batch_size "$batch" --gradient_accumulation_steps "$accum" --dataloader_num_workers "$loader_workers" \
